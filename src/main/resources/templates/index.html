@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="${title}">Wordle Clone</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #121213;
+            color: #fff;
+            text-align: center;
+            margin-top: 100px;
+        }
+        h1 { color: #6aaa64; }
+    </style>
+</head>
+<body>
+<h1 th:text="${title}">Wordle Clone</h1>
+<p th:text="${message}">Welcome to Wordle in Java!</p>
+</body>
+</html>
