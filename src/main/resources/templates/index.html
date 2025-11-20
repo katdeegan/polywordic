@@ -1,21 +1,67 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title th:text="${title}">Wordle Clone</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #121213;
-            color: #fff;
-            text-align: center;
-            margin-top: 100px;
-        }
-        h1 { color: #6aaa64; }
-    </style>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Polywordic</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
 </head>
 <body>
-<h1 th:text="${title}">Wordle Clone</h1>
-<p th:text="${message}">Welcome to Wordle in Java!</p>
+<div class="container">
+    <header>
+        <h1>POLYWORDIC</h1>
+        <p class="subtitle">You have 6 chances to guess a 5-letter word. Good luck!</p>
+    </header>
+
+    <main>
+        <div id="game-board">
+            <!-- Rows will be generated dynamically -->
+        </div>
+
+        <div id="message" class="message"></div>
+
+        <button id="guess-btn" class="guess-btn">GUESS WORD</button>
+
+        <div id="keyboard">
+            <div class="keyboard-row">
+                <button class="key" data-key="Q">Q</button>
+                <button class="key" data-key="W">W</button>
+                <button class="key" data-key="E">E</button>
+                <button class="key" data-key="R">R</button>
+                <button class="key" data-key="T">T</button>
+                <button class="key" data-key="Y">Y</button>
+                <button class="key" data-key="U">U</button>
+                <button class="key" data-key="I">I</button>
+                <button class="key" data-key="O">O</button>
+                <button class="key" data-key="P">P</button>
+            </div>
+            <div class="keyboard-row">
+                <button class="key" data-key="A">A</button>
+                <button class="key" data-key="S">S</button>
+                <button class="key" data-key="D">D</button>
+                <button class="key" data-key="F">F</button>
+                <button class="key" data-key="G">G</button>
+                <button class="key" data-key="H">H</button>
+                <button class="key" data-key="J">J</button>
+                <button class="key" data-key="K">K</button>
+                <button class="key" data-key="L">L</button>
+            </div>
+            <div class="keyboard-row">
+                <button class="key" data-key="Z">Z</button>
+                <button class="key" data-key="X">X</button>
+                <button class="key" data-key="C">C</button>
+                <button class="key" data-key="V">V</button>
+                <button class="key" data-key="B">B</button>
+                <button class="key" data-key="N">N</button>
+                <button class="key" data-key="M">M</button>
+                <button class="key key-large" data-key="BACKSPACE">⌫</button>
+            </div>
+        </div>
+
+        <button id="new-game-btn" class="new-game-btn">New Game</button>
+    </main>
+</div>
+
+<script th:src="@{/js/game.js}"></script>
 </body>
 </html>

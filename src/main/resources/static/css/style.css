@@ -1,0 +1,264 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: #121213;
+    color: #ffffff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    padding: 20px;
+}
+
+.container {
+    max-width: 500px;
+    width: 100%;
+}
+
+header {
+    text-align: center;
+    margin-bottom: 30px;
+    border-bottom: 1px solid #3a3a3c;
+    padding-bottom: 20px;
+}
+
+h1 {
+    font-size: 2.5rem;
+    font-weight: bold;
+    letter-spacing: 0.2rem;
+}
+
+.subtitle {
+    color: #818384;
+    margin-top: 10px;
+    font-size: 0.9rem;
+}
+
+#game-board {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    margin-bottom: 30px;
+}
+
+.row {
+    display: flex;
+    gap: 5px;
+    justify-content: center;
+}
+
+.tile {
+    width: 62px;
+    height: 62px;
+    border: 2px solid #3a3a3c;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2rem;
+    font-weight: bold;
+    text-transform: uppercase;
+    transition: all 0.3s ease;
+}
+
+.tile.filled {
+    border-color: #565758;
+    animation: pop 0.1s ease-in-out;
+}
+
+.tile.correct {
+    background-color: #538d4e;
+    border-color: #538d4e;
+    animation: flip 0.5s ease-in-out;
+}
+
+.tile.present {
+    background-color: #b59f3b;
+    border-color: #b59f3b;
+    animation: flip 0.5s ease-in-out;
+}
+
+.tile.absent {
+    background-color: #3a3a3c;
+    border-color: #3a3a3c;
+    animation: flip 0.5s ease-in-out;
+}
+
+@keyframes pop {
+    0%, 100% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.1);
+    }
+}
+
+@keyframes flip {
+    0% {
+        transform: rotateX(0);
+    }
+    50% {
+        transform: rotateX(90deg);
+    }
+    100% {
+        transform: rotateX(0);
+    }
+}
+
+@keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
+    20%, 40%, 60%, 80% { transform: translateX(5px); }
+}
+
+.message {
+    text-align: center;
+    margin-bottom: 20px;
+    min-height: 30px;
+    font-size: 1.1rem;
+    font-weight: bold;
+}
+
+.message.success {
+    color: #538d4e;
+}
+
+.message.error {
+    color: #ff6b6b;
+}
+
+.message.info {
+    color: #b59f3b;
+}
+
+/* GUESS WORD BUTTON */
+.guess-btn {
+    width: 100%;
+    background-color: #6aad75;
+    color: #ffffff;
+    border: none;
+    border-radius: 4px;
+    padding: 18px;
+    font-size: 1.1rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    margin-bottom: 20px;
+    text-transform: uppercase;
+    letter-spacing: 0.1rem;
+}
+
+.guess-btn:hover {
+    background-color: #7ec589;
+}
+
+.guess-btn:active {
+    transform: scale(0.98);
+}
+
+.guess-btn:disabled {
+    background-color: #3a3a3c;
+    cursor: not-allowed;
+    opacity: 0.5;
+}
+
+#keyboard {
+    margin-bottom: 20px;
+}
+
+.keyboard-row {
+    display: flex;
+    justify-content: center;
+    gap: 6px;
+    margin-bottom: 8px;
+}
+
+.key {
+    background-color: #818384;
+    color: #ffffff;
+    border: none;
+    border-radius: 4px;
+    padding: 15px;
+    min-width: 43px;
+    font-size: 0.9rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.1s ease;
+}
+
+.key:hover {
+    opacity: 0.8;
+}
+
+.key:active {
+    transform: scale(0.95);
+}
+
+.key-large {
+    min-width: 65px;
+    font-size: 0.75rem;
+}
+
+.key.correct {
+    background-color: #538d4e;
+}
+
+.key.present {
+    background-color: #b59f3b;
+}
+
+.key.absent {
+    background-color: #3a3a3c;
+}
+
+.new-game-btn {
+    width: 100%;
+    background-color: #538d4e;
+    color: #ffffff;
+    border: none;
+    border-radius: 4px;
+    padding: 15px;
+    font-size: 1rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.new-game-btn:hover {
+    background-color: #6aad5f;
+}
+
+.new-game-btn:active {
+    transform: scale(0.98);
+}
+
+@media (max-width: 600px) {
+    .tile {
+        width: 52px;
+        height: 52px;
+        font-size: 1.5rem;
+    }
+
+    .key {
+        padding: 12px;
+        min-width: 35px;
+        font-size: 0.8rem;
+    }
+
+    .key-large {
+        min-width: 55px;
+    }
+
+    h1 {
+        font-size: 2rem;
+    }
+
+    .guess-btn {
+        padding: 15px;
+        font-size: 1rem;
+    }
+}
