@@ -4,27 +4,45 @@ A Wordle-inspired Java web application built using **Spring Boot**, **Thymeleaf*
 
 ---
 
-### Team Members
+## Team Members
+
 - Katherine Deegan
 - Yifei Zhang
 
 ---
 
-### Project Description
-
+## Project Description
 
 ---
 
-### Object-Oriented Design Patterns Used
+## Object-Oriented Design Patterns Used
 
-| Pattern                   | Description | Implementation                                                                                                                                                                                                                                                                                                                                                  |
-|---------------------------|-------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| **Model-View-Controller** | description | Model: [`src/main/java/.../polywordic/model`](src/main/java/com/ooad_kd_yz/polywordic/model)<br/>View: [`src/main/resources/templates/index.html`](src/main/resources/templates/index.html)<br/>Controller: [`src/main/java/.../polywordic/controller/PolywordicController.java`](src/main/java/com/ooad_kd_yz/polywordic/controller/PolywordicController.java) |
-| **PATTERN 2 NAME**        | description | [`LINK_TO_FILES_WHERE_IMPLEMENT`](src/main/java/com/ooad_kd_yz/polywordic/model)                                                                                                                                                                                                                                                                                |
-| **PATTERN 3 NAME**        | description | [`LINK_TO_FILES_WHERE_IMPLEMENT`](src/main/java/com/ooad_kd_yz/polywordic/model)                                                                                                                                                                                                                                                                                |
-| **PATTERN 4 NAME**        | description | [`LINK_TO_FILES_WHERE_IMPLEMENT`](src/main/java/com/ooad_kd_yz/polywordic/model)                                                                                                                                                                                                                                                                                |
-| **PATTERN 5 NAME**        | description | [`LINK_TO_FILES_WHERE_IMPLEMENT`](src/main/java/com/ooad_kd_yz/polywordic/model)                                                                                                                                                                                                                                                                                |
+### 1. Model-View-Controller (MVC)
+
+_Description:_
+
+_Implementation:_
+
+- Model file(s): [`polywordic/model`](src/main/java/com/ooad_kd_yz/polywordic/model)
+- View file(s): [`resources/templates`](src/main/resources/templates)
+- Controller file(s): [`polywordic/controller`](src/main/java/com/ooad_kd_yz/polywordic/controller)
+
+### 2. Iterator
+
+_Description:_
+
+Provides a way to access the elements of an aggregate object sequentially without exposing its underlying representation by implementing Iterator and Iterable interfaces.
+
+_Implementation:_
+
+- Iterator Interface: [`polywordic/interface/PWIterator.java`](src/main/java/com/ooad_kd_yz/polywordic/model/iterator/PWIterator.java)
+  - The concrete iterator object [**PolywordicWordIterator**](src/main/java/com/ooad_kd_yz/polywordic/model/iterator/PolywordicWordIterator.java) implements the **PWIterator interface**.
+- Iterable Interface: [`polywordic/interface/PWIterable.java`](src/main/java/com/ooad_kd_yz/polywordic/model/iterator/PWIterable.java)
+  - The aggregate object [**PolywordicWord**](src/main/java/com/ooad_kd_yz/polywordic/model/PolywordicWord.java) (composed of [**PolywordicLetter**](src/main/java/com/ooad_kd_yz/polywordic/model/PolywordicLetter.java) objects) and implements the **PWIterable** interface.
+    |
+
 ### Run Polywordic Locally
+
 From terminal (in polywordic/ directory) run: `./gradlew bootRun`
 
 **OR**, from the file navigator, run: [PolywordicApplication.java](src/main/java/com/ooad_kd_yz/polywordic/PolywordicApplication.java)
