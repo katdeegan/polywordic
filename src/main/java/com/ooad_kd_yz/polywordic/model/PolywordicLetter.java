@@ -27,11 +27,9 @@ public class PolywordicLetter {
         return status;
     }
 
-    public void setStatus(LetterStatus status) {
-        this.status = status;
-    }
+    public void setStatus(LetterStatus newStatus) { this.status = newStatus; }
 
-    protected boolean shouldUpdateStatus(LetterStatus current, LetterStatus newStatus) {
+    public boolean shouldUpdateStatus(LetterStatus current, LetterStatus newStatus) {
         if (current == LetterStatus.CORRECT_POSITION) {
             return false;
         }
