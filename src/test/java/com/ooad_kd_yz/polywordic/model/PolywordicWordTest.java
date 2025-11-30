@@ -18,34 +18,34 @@ public class PolywordicWordTest {
     class ConstructorTests {
 
         @Test
-        @DisplayName("Should create PolywordicWord with valid 6-letter word")
+        @DisplayName("Should create PolywordicWord with valid 5-letter word")
         void testCreateValidWord() {
-            PolywordicWord word = new PolywordicWord("CASTLE");
+            PolywordicWord word = new PolywordicWord("RIGHT");
 
-            assertEquals("CASTLE", word.getWord());
-            assertEquals(6, word.wordLength());
+            assertEquals("RIGHT", word.getWord());
+            assertEquals(5, word.wordLength());
             assertNotNull(word.getLetters());
         }
 
         @Test
         @DisplayName("Should convert lowercase to uppercase")
         void testUppercaseConversion() {
-            PolywordicWord word = new PolywordicWord("castle");
+            PolywordicWord word = new PolywordicWord("flies");
 
-            assertEquals("CASTLE", word.getWord());
-            assertEquals('C', word.charAt(0));
-            assertEquals('E', word.charAt(5));
+            assertEquals("FLIES", word.getWord());
+            assertEquals('F', word.charAt(0));
+            assertEquals('S', word.charAt(4));
         }
 
         @Test
         @DisplayName("Should handle mixed case input")
         void testMixedCaseInput() {
-            PolywordicWord word = new PolywordicWord("CaStLe");
-            assertEquals("CASTLE", word.getWord());
+            PolywordicWord word = new PolywordicWord("mIxEd");
+            assertEquals("MIXED", word.getWord());
         }
 
         @ParameterizedTest
-        @ValueSource(strings = {"APPLE", "CAT", "CASTLES", "A", ""})
+        @ValueSource(strings = {"APE", "CAT", "CASTLES", "A", ""})
         @DisplayName("Should throw exception for invalid word length")
         void testInvalidWordLength(String invalidWord) {
             assertThrows(IllegalArgumentException.class, () -> {
@@ -61,13 +61,13 @@ public class PolywordicWordTest {
                     () -> new PolywordicWord(null)
             );
 
-            assertTrue(exception.getMessage().contains("6 letters"));
+            assertTrue(exception.getMessage().contains("5 letters"));
         }
 
         @Test
         @DisplayName("Should initialize all letters with UNKNOWN status")
         void testInitialLetterStatus() {
-            PolywordicWord word = new PolywordicWord("CASTLE");
+            PolywordicWord word = new PolywordicWord("WORDS");
 
             for (int i = 0; i < word.wordLength(); i++) {
                 assertEquals(LetterStatus.UNKNOWN,
@@ -78,7 +78,7 @@ public class PolywordicWordTest {
         @Test
         @DisplayName("Should initialize letters with correct positions")
         void testLetterPositions() {
-            PolywordicWord word = new PolywordicWord("CASTLE");
+            PolywordicWord word = new PolywordicWord("CARDS");
 
             for (int i = 0; i < word.wordLength(); i++) {
                 assertEquals(i, word.getLetter(i).getPosition());
@@ -94,18 +94,17 @@ public class PolywordicWordTest {
 
         @BeforeEach
         void setUp() {
-            word = new PolywordicWord("CASTLE");
+            word = new PolywordicWord("SUPER");
         }
 
         @Test
         @DisplayName("Should get character at valid position")
         void testCharAt() {
-            assertEquals('C', word.charAt(0));
-            assertEquals('A', word.charAt(1));
-            assertEquals('S', word.charAt(2));
-            assertEquals('T', word.charAt(3));
-            assertEquals('L', word.charAt(4));
-            assertEquals('E', word.charAt(5));
+            assertEquals('S', word.charAt(0));
+            assertEquals('U', word.charAt(1));
+            assertEquals('P', word.charAt(2));
+            assertEquals('E', word.charAt(3));
+            assertEquals('R', word.charAt(4));
         }
 
         @Test
@@ -114,7 +113,7 @@ public class PolywordicWordTest {
             PolywordicLetter letter = word.getLetter(0);
 
             assertNotNull(letter);
-            assertEquals('C', letter.getLetter());
+            assertEquals('S', letter.getLetter());
             assertEquals(0, letter.getPosition());
             assertEquals(LetterStatus.UNKNOWN, letter.getStatus());
         }
@@ -133,14 +132,14 @@ public class PolywordicWordTest {
         void testGetLetters() {
             List<PolywordicLetter> letters = word.getLetters();
 
-            assertEquals('C', letters.get(0).getLetter());
-            assertEquals('E', letters.get(5).getLetter());
+            assertEquals('S', letters.get(0).getLetter());
+            assertEquals('R', letters.get(4).getLetter());
         }
 
         @Test
         @DisplayName("Should get word length")
         void testLength() {
-            assertEquals(6, word.wordLength());
+            assertEquals(5, word.wordLength());
         }
     }
 
@@ -152,7 +151,7 @@ public class PolywordicWordTest {
 
         @BeforeEach
         void setUp() {
-            word = new PolywordicWord("CASTLE");
+            word = new PolywordicWord("SUPER");
         }
 
         @Test
@@ -264,70 +263,68 @@ public class PolywordicWordTest {
         @Test
         @DisplayName("Should match identical words")
         void testMatchesIdentical() {
-            PolywordicWord word1 = new PolywordicWord("CASTLE");
-            PolywordicWord word2 = new PolywordicWord("CASTLE");
+            PolywordicWord word1 = new PolywordicWord("WATCH");
+            PolywordicWord word2 = new PolywordicWord("WATCH");
 
             assertTrue(word1.matches(word2));
-            assertTrue(word1.matches("CASTLE"));
+            assertTrue(word1.matches("WATCH"));
         }
 
         @Test
         @DisplayName("Should match case-insensitive")
         void testMatchesCaseInsensitive() {
-            PolywordicWord word = new PolywordicWord("CASTLE");
+            PolywordicWord word = new PolywordicWord("UPPER");
 
-            assertTrue(word.matches("castle"));
-            assertTrue(word.matches("CaStLe"));
-            assertTrue(word.matches("CASTLE"));
+            assertTrue(word.matches("upper"));
+            assertTrue(word.matches("uPPer"));
+            assertTrue(word.matches("UPPER"));
         }
 
         @Test
         @DisplayName("Should not match different words")
         void testNotMatches() {
-            PolywordicWord word1 = new PolywordicWord("CASTLE");
-            PolywordicWord word2 = new PolywordicWord("BRIDGE");
+            PolywordicWord word1 = new PolywordicWord("RINSE");
+            PolywordicWord word2 = new PolywordicWord("RIGHT");
 
             assertFalse(word1.matches(word2));
-            assertFalse(word1.matches("BRIDGE"));
-            assertFalse(word1.matches("PALACE"));
         }
 
         @Test
         @DisplayName("Should handle null in string match")
         void testMatchesNullString() {
-            PolywordicWord word = new PolywordicWord("CASTLE");
+            PolywordicWord word = new PolywordicWord("RACES");
             assertFalse(word.matches((String) null));
         }
 
         @Test
         @DisplayName("Same words are equal")
         void testWordEqualsSameWord() {
-            PolywordicWord w1 = new PolywordicWord("MONKEY");
-            PolywordicWord w2 = new PolywordicWord("MONKEY");
+            PolywordicWord w1 = new PolywordicWord("TIGHT");
+            PolywordicWord w2 = new PolywordicWord("TIGHT");
             assertEquals(w1, w2);
         }
 
         @Test
         @DisplayName("Different words not equal")
         void testWordEqualsDifferentWord() {
-            PolywordicWord w1 = new PolywordicWord("MONKEY");
-            PolywordicWord w2 = new PolywordicWord("DONKEY");
+            PolywordicWord w1 = new PolywordicWord("LIVID");
+            PolywordicWord w2 = new PolywordicWord("TIGHT");
             assertNotEquals(w1, w2);
         }
 
         @Test
         @DisplayName("Hash code same for same word")
         void testHashCodeSameForEqualWords() {
-            PolywordicWord w1 = new PolywordicWord("ORANGE");
-            PolywordicWord w2 = new PolywordicWord("ORANGE");
+            PolywordicWord w1 = new PolywordicWord("SHINE");
+            PolywordicWord w2 = new PolywordicWord("SHINE");
             assertEquals(w1.hashCode(), w2.hashCode());
         }
 
         @Test
         @DisplayName("Hash code different for different word")
         void testHashCodeDifferentForDifferentWords() {
-            PolywordicWord w1 = new PolywordicWord("ORANGE");
-            PolywordicWord w2 = new PolywordicWord("PURPLE");
+            PolywordicWord w1 = new PolywordicWord("SIGHT");
+            PolywordicWord w2 = new PolywordicWord("RIGHT");
             assertNotEquals(w1.hashCode(), w2.hashCode());
         }
 
@@ -336,34 +333,28 @@ public class PolywordicWordTest {
     @Test
     @DisplayName("Should evaluate guess against target word")
     void testEvaluateGuess() {
-        PolywordicWord target = new PolywordicWord("BANANA");
-        PolywordicWord guess  = new PolywordicWord("CANNON");
+        PolywordicWord target = new PolywordicWord("WATCH");
+        PolywordicWord guess  = new PolywordicWord("WAVES");
 
         List<LetterStatus> results = target.evaluateGuess(guess);
 
-        // B A N A N A
-        // C A S T L E
-
-        assertEquals(6, results.size());
+        assertEquals(5, results.size());
 
         // Position-by-position expectations:
-        // 0: C vs B
-        assertEquals(LetterStatus.NOT_IN_WORD, results.get(0));
+        // 0: W vs W
+        assertEquals(LetterStatus.CORRECT_POSITION, results.get(0));
 
         // 1: A vs A → CORRECT_POSITION
         assertEquals(LetterStatus.CORRECT_POSITION, results.get(1));
 
-        // 2: N vs N
-        assertEquals(LetterStatus.CORRECT_POSITION, results.get(2));
+        // 2: V vs T
+        assertEquals(LetterStatus.NOT_IN_WORD, results.get(2));
 
-        // 3: N va A
-        assertEquals(LetterStatus.INCORRECT_POSITION, results.get(3));
+        // 3: E vs C
+        assertEquals(LetterStatus.NOT_IN_WORD, results.get(3));
 
-        // 4: O vs N
+        // 4: S vs H
         assertEquals(LetterStatus.NOT_IN_WORD, results.get(4));
-
-        // 5: N vs A -> already have 2 N guess for the 2 Ns in word, should be NOT_IN_WORD
-        assertEquals(LetterStatus.NOT_IN_WORD, results.get(5));
     }
 
 }

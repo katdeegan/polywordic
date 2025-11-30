@@ -1,6 +1,6 @@
 package com.ooad_kd_yz.polywordic.model;
 
-// Represents a 6-letter Wordle word with individual letter GuessResult tracking.
+// Represents a 5-letter Polywordic word with individual letter GuessResult tracking.
 // Implements the Iterator Pattern to allow iteration over letters and their states.
 
 import com.ooad_kd_yz.polywordic.model.iterator.PWIterable;
@@ -13,8 +13,8 @@ public class PolywordicWord implements PWIterable {
     private final List<PolywordicLetter> letters;
 
     public PolywordicWord(String word) {
-        if (word == null || word.length() != 6) {
-            throw new IllegalArgumentException("Word must be exactly 6 letters");
+        if (word == null || word.length() != 5) {
+            throw new IllegalArgumentException("Word must be exactly 5 letters");
         }
 
         this.word = word.toUpperCase();

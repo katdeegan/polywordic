@@ -10,7 +10,7 @@ public class PolywordicWordIteratorTest {
     @Test
     @DisplayName("PolywordicWordIterator should be implement PWIterator Interface")
     void testCustomIteratorInterface() {
-        PolywordicWord word = new PolywordicWord("CASTLE");
+        PolywordicWord word = new PolywordicWord("WATCH");
         PWIterator<PolywordicLetter> iterator = word.createIterator();
 
         assertTrue(iterator.hasNext());
@@ -21,11 +21,11 @@ public class PolywordicWordIteratorTest {
     @Test
     @DisplayName("PolywordicWordIterator should be able to reset")
     void testIteratorResets() {
-        PolywordicWord word = new PolywordicWord("CASTLE");
+        PolywordicWord word = new PolywordicWord("WATCH");
         PWIterator<PolywordicLetter> iterator = word.createIterator();
 
         PolywordicLetter currentLetter = iterator.next();
-        assertEquals('C', currentLetter.getLetter());
+        assertEquals('W', currentLetter.getLetter());
         assertEquals(0, currentLetter.getPosition());
 
         PolywordicLetter nextLetter = iterator.next();
@@ -34,7 +34,7 @@ public class PolywordicWordIteratorTest {
 
         iterator.reset();
         PolywordicLetter currentLetterAfterReset = iterator.next();
-        assertEquals('C', currentLetterAfterReset.getLetter());
+        assertEquals('W', currentLetterAfterReset.getLetter());
         assertEquals(0, currentLetterAfterReset.getPosition());
 
 

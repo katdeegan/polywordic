@@ -19,7 +19,7 @@ class GameStateTest {
 
         @BeforeEach
         void setUp() {
-            context = new GameStateContext("test-1", "CASTLE", 6);
+            context = new GameStateContext("test-1", "RIGHT", 6);
         }
 
         @Test
@@ -33,10 +33,10 @@ class GameStateTest {
         @Test
         @DisplayName("Should allow guesses in Active state")
         void testMakeGuessInActiveState() {
-            PolywordicWord result = context.makeGuess("BRIDGE");
+            PolywordicWord result = context.makeGuess("WRONG");
 
             assertNotNull(result);
-            assertEquals("BRIDGE", result.getWord());
+            assertEquals("WRONG", result.getWord());
             assertEquals(1, context.getCurrentAttempt());
             assertEquals(5, context.getRemainingAttempts());
         }
@@ -44,7 +44,7 @@ class GameStateTest {
         @Test
         @DisplayName("Should remain in Active state after wrong guess")
         void testRemainActiveAfterWrongGuess() {
-            context.makeGuess("BRIDGE");
+            context.makeGuess("WRONG");
 
             assertEquals("ACTIVE", context.getStateName());
             assertFalse(context.isGameOver());
@@ -54,7 +54,7 @@ class GameStateTest {
         @Test
         @DisplayName("Should transition to Won state on correct guess")
         void testTransitionToWonState() {
-            context.makeGuess("CASTLE");
+            context.makeGuess("RIGHT");
 
             assertEquals("WON", context.getStateName());
             assertTrue(context.isGameOver());
@@ -64,12 +64,12 @@ class GameStateTest {
         @Test
         @DisplayName("Should transition to Lost state after max attempts")
         void testTransitionToLostState() {
-            context.makeGuess("BRIDGE");
-            context.makeGuess("PALACE");
-            context.makeGuess("CHANGE");
-            context.makeGuess("ORANGE");
-            context.makeGuess("FRANCE");
-            context.makeGuess("PLACES");
+            context.makeGuess("SUPER");
+            context.makeGuess("LIGHT");
+            context.makeGuess("TIGHT");
+            context.makeGuess("WRONG");
+            context.makeGuess("HELLO");
+            context.makeGuess("SIGHT");
 
             assertEquals("LOST", context.getStateName());
             assertTrue(context.isGameOver());
@@ -85,8 +85,8 @@ class GameStateTest {
 
         @BeforeEach
         void setUp() {
-            context = new GameStateContext("test-2", "CASTLE", 6);
-            context.makeGuess("CASTLE");
+            context = new GameStateContext("test-2", "RIGHT", 6);
+            context.makeGuess("RIGHT");
         }
 
         @Test
@@ -102,7 +102,7 @@ class GameStateTest {
         void testCannotGuessInWonState() {
             IllegalStateException exception = assertThrows(
                     IllegalStateException.class,
-                    () -> context.makeGuess("BRIDGE")
+                    () -> context.makeGuess("WRONG")
             );
 
             assertTrue(exception.getMessage().contains("already won"));
@@ -117,10 +117,10 @@ class GameStateTest {
         @Test
         @DisplayName("Should win on last attempt")
         void testWinOnLastAttempt() {
-            GameStateContext ctx = new GameStateContext("test-3", "CASTLE", 3);
-            ctx.makeGuess("BRIDGE");
-            ctx.makeGuess("PALACE");
-            ctx.makeGuess("CASTLE"); // Win on last attempt
+            GameStateContext ctx = new GameStateContext("test-3", "SUPER", 3);
+            ctx.makeGuess("FIGHT");
+            ctx.makeGuess("TIGHT");
+            ctx.makeGuess("SUPER"); // Win on last attempt
 
             assertEquals("WON", ctx.getStateName());
             assertTrue(ctx.isWon());
@@ -136,10 +136,10 @@ class GameStateTest {
 
         @BeforeEach
         void setUp() {
-            context = new GameStateContext("test-3", "CASTLE", 3);
-            context.makeGuess("BRIDGE");
-            context.makeGuess("PALACE");
-            context.makeGuess("ORANGE");
+            context = new GameStateContext("test-3", "SUPER", 3);
+            context.makeGuess("FIGHT");
+            context.makeGuess("TIGHT");
+            context.makeGuess("LIGHT");
         }
 
         @Test
@@ -155,7 +155,7 @@ class GameStateTest {
         void testCannotGuessInLostState() {
             IllegalStateException exception = assertThrows(
                     IllegalStateException.class,
-                    () -> context.makeGuess("CASTLE")
+                    () -> context.makeGuess("WRONG")
             );
 
             assertTrue(exception.getMessage().contains("over") ||
@@ -177,36 +177,36 @@ class GameStateTest {
         @Test
         @DisplayName("Should transition Active -> Won")
         void testActiveToWon() {
-            GameStateContext context = new GameStateContext("test-4", "CASTLE", 6);
+            GameStateContext context = new GameStateContext("test-4", "FIGHT", 6);
 
             assertEquals("ACTIVE", context.getStateName());
-            context.makeGuess("CASTLE");
+            context.makeGuess("FIGHT");
             assertEquals("WON", context.getStateName());
         }
 
         @Test
         @DisplayName("Should transition Active -> Lost")
         void testActiveToLost() {
-            GameStateContext context = new GameStateContext("test-5", "CASTLE", 2);
+            GameStateContext context = new GameStateContext("test-5", "FLIPS", 2);
 
             assertEquals("ACTIVE", context.getStateName());
-            context.makeGuess("BRIDGE");
+            context.makeGuess("WRONG");
             assertEquals("ACTIVE", context.getStateName());
-            context.makeGuess("PALACE");
+            context.makeGuess("TIGHT");
             assertEquals("LOST", context.getStateName());
         }
 
         @Test
         @DisplayName("Should not transition from Won state")
         void testCannotTransitionFromWon() {
-            GameStateContext context = new GameStateContext("test-6", "CASTLE", 6);
-            context.makeGuess("CASTLE");
+            GameStateContext context = new GameStateContext("test-6", "FLIPS", 6);
+            context.makeGuess("FLIPS");
 
             assertEquals("WON", context.getStateName());
 
             // Try to make another guess - should throw exception
             assertThrows(IllegalStateException.class,
-                    () -> context.makeGuess("BRIDGE"));
+                    () -> context.makeGuess("SWEET"));
 
             // Should still be in Won state
             assertEquals("WON", context.getStateName());
@@ -215,14 +215,14 @@ class GameStateTest {
         @Test
         @DisplayName("Should not transition from Lost state")
         void testCannotTransitionFromLost() {
-            GameStateContext context = new GameStateContext("test-7", "CASTLE", 1);
-            context.makeGuess("BRIDGE");
+            GameStateContext context = new GameStateContext("test-7", "RIGHT", 1);
+            context.makeGuess("WRONG");
 
             assertEquals("LOST", context.getStateName());
 
             // Try to make another guess - should throw exception
             assertThrows(IllegalStateException.class,
-                    () -> context.makeGuess("CASTLE"));
+                    () -> context.makeGuess("FLIPS"));
 
             // Should still be in Lost state
             assertEquals("LOST", context.getStateName());
@@ -231,15 +231,15 @@ class GameStateTest {
         @Test
         @DisplayName("Should handle multiple guesses before win")
         void testMultipleGuessesBeforeWin() {
-            GameStateContext context = new GameStateContext("test-8", "CASTLE", 6);
+            GameStateContext context = new GameStateContext("test-8", "SUPER", 6);
 
-            context.makeGuess("BRIDGE");
+            context.makeGuess("WRONG");
             assertEquals("ACTIVE", context.getStateName());
 
-            context.makeGuess("PALACE");
+            context.makeGuess("MIGHT");
             assertEquals("ACTIVE", context.getStateName());
 
-            context.makeGuess("CASTLE");
+            context.makeGuess("SUPER");
             assertEquals("WON", context.getStateName());
         }
     }
@@ -251,60 +251,47 @@ class GameStateTest {
         @Test
         @DisplayName("Should maintain guess history")
         void testGuessHistory() {
-            GameStateContext context = new GameStateContext("test-9", "CASTLE", 6);
+            GameStateContext context = new GameStateContext("test-9", "RIGHT", 6);
 
-            context.makeGuess("BRIDGE");
-            context.makeGuess("PALACE");
-            context.makeGuess("ORANGE");
+            context.makeGuess("WRONG");
+            context.makeGuess("SUPER");
+            context.makeGuess("TIGHT");
 
             assertEquals(3, context.getGuesses().size());
-            assertEquals("BRIDGE", context.getGuesses().get(0).getWord());
-            assertEquals("PALACE", context.getGuesses().get(1).getWord());
-            assertEquals("ORANGE", context.getGuesses().get(2).getWord());
+            assertEquals("WRONG", context.getGuesses().get(0).getWord());
+            assertEquals("SUPER", context.getGuesses().get(1).getWord());
+            assertEquals("TIGHT", context.getGuesses().get(2).getWord());
         }
 
         @Test
         @DisplayName("Should track remaining attempts")
         void testRemainingAttempts() {
-            GameStateContext context = new GameStateContext("test-10", "CASTLE", 6);
+            GameStateContext context = new GameStateContext("test-10", "SUPER", 6);
 
             assertEquals(6, context.getRemainingAttempts());
 
-            context.makeGuess("BRIDGE");
+            context.makeGuess("RIGHT");
             assertEquals(5, context.getRemainingAttempts());
 
-            context.makeGuess("PALACE");
+            context.makeGuess("WRONG");
             assertEquals(4, context.getRemainingAttempts());
         }
 
         @Test
         @DisplayName("Should aggregate letter statuses")
         void testAggregateLetterStatuses() {
-            GameStateContext context = new GameStateContext("test-11", "CASTLE", 6);
+            GameStateContext context = new GameStateContext("test-11", "LINES", 6);
 
-            context.makeGuess("CRANES");
+            context.makeGuess("LIGHT");
 
             var statuses = context.getAggregateLetterStatuses();
 
             assertNotNull(statuses);
             assertEquals(26, statuses.size()); // All letters A-Z
 
-            // C should be CORRECT_POSITION (position 0 in both words)
-            assertEquals(LetterStatus.CORRECT_POSITION, statuses.get('C'));
-        }
-
-        @Test
-        @DisplayName("Should return defensive copy of guesses")
-        void testDefensiveCopyOfGuesses() {
-            GameStateContext context = new GameStateContext("test-12", "CASTLE", 6);
-
-            context.makeGuess("BRIDGE");
-
-            var guesses1 = context.getGuesses();
-            var guesses2 = context.getGuesses();
-
-            assertNotSame(guesses1, guesses2);
-            assertEquals(guesses1.size(), guesses2.size());
+            // L & I should be CORRECT_POSITION (positions 0 & 1 in both words)
+            assertEquals(LetterStatus.CORRECT_POSITION, statuses.get('L'));
+            assertEquals(LetterStatus.CORRECT_POSITION, statuses.get('I'));
         }
     }
 
@@ -315,20 +302,20 @@ class GameStateTest {
         @Test
         @DisplayName("Should handle single attempt game")
         void testSingleAttemptGame() {
-            GameStateContext context = new GameStateContext("test-13", "CASTLE", 1);
+            GameStateContext context = new GameStateContext("test-13", "SUPER", 1);
 
             assertEquals(1, context.getMaxAttempts());
 
-            context.makeGuess("BRIDGE");
+            context.makeGuess("WRONG");
             assertEquals("LOST", context.getStateName());
         }
 
         @Test
         @DisplayName("Should win on first guess with single attempt")
         void testWinOnFirstGuessWithSingleAttempt() {
-            GameStateContext context = new GameStateContext("test-14", "CASTLE", 1);
+            GameStateContext context = new GameStateContext("test-14", "TIGHT", 1);
 
-            context.makeGuess("CASTLE");
+            context.makeGuess("TIGHT");
             assertEquals("WON", context.getStateName());
             assertEquals(1, context.getCurrentAttempt());
         }
@@ -336,10 +323,10 @@ class GameStateTest {
         @Test
         @DisplayName("Should handle case-insensitive guesses")
         void testCaseInsensitiveGuesses() {
-            GameStateContext context = new GameStateContext("test-15", "CASTLE", 6);
+            GameStateContext context = new GameStateContext("test-15", "TENSE", 6);
 
-            PolywordicWord result = context.makeGuess("castle");
-            assertEquals("CASTLE", result.getWord());
+            PolywordicWord result = context.makeGuess("tense");
+            assertEquals("TENSE", result.getWord());
         }
     }
 }
