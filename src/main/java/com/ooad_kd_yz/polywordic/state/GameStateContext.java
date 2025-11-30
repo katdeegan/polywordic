@@ -22,6 +22,7 @@ public class GameStateContext {
     private final int maxAttempts;
     private IGameState currentState;
 
+    // TODO: we could implement singleton pattern here, but with a map (i.e. make sure only one game exists with a given game ID)
     public GameStateContext(String gameId, String targetWord, int maxAttempts) {
         this.gameId = gameId;
         this.targetWord = new PolywordicWord(targetWord);
