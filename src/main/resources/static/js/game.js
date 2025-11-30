@@ -1,15 +1,82 @@
 // Game constants
-const MAX_ATTEMPTS = 6;
 const WORD_LENGTH = 5;
 
-// TODO: variables for storing game state (currentRow, currentTile, currentGuessNumber, gameOver, etc.)
+// Game state variables
+let gameId = null;
+let currentRow = 0;
+let currentTile = 0;
+let currentGuess = '';
+let gameOver = false;
+let maxAttempts = 6;
+let selectedDifficulty = null;
 
-// Initialize game board - rows are generated dynamically as user guesses letters
+// TODO: update to call backend endpoints (defined in controller/PolywordicController.java)
+// TODO: frontend game logic: adding letters, submitting guesses, displaying results
+
+// handles difficulty button selection and creates new game
+function handleDifficultySelection(difficulty) {
+    selectedDifficulty = difficulty;
+    showMessage('Creating game...', 'info');
+    createNewGame(difficulty);
+}
+
+// Calls backend API to create game at desired difficulty level
+async function createNewGame(difficulty) {
+    try {
+        const response = await fetch(`/api/game/new?difficulty=${difficulty}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        });
+
+        if (!response.ok) {
+            throw new Error('Failed to create game');
+        }
+
+        const data = await response.json();
+
+        // Store game information
+        gameId = data.gameId;
+        maxAttempts = data.maxAttempts;
+
+        console.log('Game created:', data);
+
+        startGame();
+
+    } catch (error) {
+        console.error('Error creating game:', error);
+        showMessage('Error creating game. Please try again.', 'error');
+    }
+}
+
+// Initializes UI for new game
+function startGame() {
+    document.getElementById('difficulty-selection').classList.add('hidden'); // hide difficulty selection screen
+    document.getElementById('game-screen').classList.remove('hidden'); // show game screen
+
+    const subtitle = document.getElementById('subtitle');
+    subtitle.textContent = `${selectedDifficulty}: Guess a 5-letter word with ${maxAttempts} chances!`;
+
+    initializeBoard();
+
+    // Reset game state
+    currentRow = 0;
+    currentTile = 0;
+    currentGuess = '';
+    gameOver = false;
+
+    showMessage('', '');
+
+    updateGuessButton();
+}
+
+// Initialize game board - empty tile rows based on difficulty level
 function initializeBoard() {
     const gameBoard = document.getElementById('game-board');
     gameBoard.innerHTML = '';
 
-    for (let i = 0; i < MAX_ATTEMPTS; i++) {
+    for (let i = 0; i < maxAttempts; i++) {
         const row = document.createElement('div');
         row.className = 'row';
         row.id = `row-${i}`;
@@ -83,9 +150,26 @@ function showMessage(text, type) {
     messageElement.className = `message ${type}`;
 }
 
-// TODO: when "New Game" button is pressed
-// Reset game
+// Reset game - when "New Game" is pressed
 function resetGame() {
+    // hide game screen and show difficulty selection
+    document.getElementById('game-screen').classList.add('hidden');
+    document.getElementById('difficulty-selection').classList.remove('hidden');
+
+    // Reset subtitle
+    document.getElementById('subtitle').textContent = 'Select a difficulty level to start';
+
+    // Reset game state
+    gameId = null;
+    currentRow = 0;
+    currentTile = 0;
+    currentGuess = '';
+    gameOver = false;
+    selectedDifficulty = null;
+
+    showMessage('', '');
+
+    resetKeyboard();
 }
 
 // TODO: Reset keyboard colors
@@ -94,8 +178,14 @@ function resetKeyboard() {
 
 // Event listeners
 document.addEventListener('DOMContentLoaded', () => {
-    initializeBoard();
-    updateGuessButton();
+
+    // Difficulty selection buttons
+    document.querySelectorAll('.difficulty-btn').forEach(button => {
+        button.addEventListener('click', () => {
+            const difficulty = button.getAttribute('data-difficulty');
+            handleDifficultySelection(difficulty);
+        });
+    });
 
     // UI Keyboard click events
     document.querySelectorAll('.key').forEach(key => {
@@ -107,7 +197,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Physical keyboard events
     document.addEventListener('keydown', (e) => {
-        if (gameOver) return;
+        // Only handle keyboard if game is active
+        if (!gameId || gameOver) return;
 
         const key = e.key.toUpperCase();
 
@@ -127,7 +218,7 @@ document.addEventListener('DOMContentLoaded', () => {
         submitGuess();
     });
 
-    // New game button
+    // New game button - returns to difficulty selection
     document.getElementById('new-game-btn').addEventListener('click', () => {
         resetGame();
     });

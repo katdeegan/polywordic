@@ -135,6 +135,123 @@ h1 {
     color: #b59f3b;
 }
 
+/* Difficulty Selection Styles */
+.difficulty-selection {
+    text-align: center;
+    padding: 40px 20px;
+}
+
+.difficulty-selection h2 {
+    font-size: 1.8rem;
+    margin-bottom: 30px;
+    color: #ffffff;
+}
+
+.difficulty-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    max-width: 350px;
+    margin: 0 auto;
+}
+
+.difficulty-btn {
+    background: linear-gradient(135deg, #538d4e 0%, #6aad5f 100%);
+    color: #ffffff;
+    border: none;
+    border-radius: 12px;
+    padding: 25px 30px;
+    font-size: 1.2rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+}
+
+.difficulty-btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.4);
+    background: linear-gradient(135deg, #6aad5f 0%, #7ec589 100%);
+}
+
+.difficulty-btn:active {
+    transform: translateY(-1px);
+}
+
+.difficulty-btn[data-difficulty="EASY"] {
+    background: linear-gradient(135deg, #538d4e 0%, #6aad5f 100%);
+}
+
+.difficulty-btn[data-difficulty="MEDIUM"] {
+    background: linear-gradient(135deg, #b59f3b 0%, #c9b458 100%);
+}
+
+.difficulty-btn[data-difficulty="HARD"] {
+    background: linear-gradient(135deg, #d95763 0%, #e67380 100%);
+}
+
+.difficulty-btn[data-difficulty="MEDIUM"]:hover {
+    background: linear-gradient(135deg, #c9b458 0%, #dac870 100%);
+}
+
+.difficulty-btn[data-difficulty="HARD"]:hover {
+    background: linear-gradient(135deg, #e67380 0%, #f28b96 100%);
+}
+
+.difficulty-name {
+    font-size: 1.5rem;
+    letter-spacing: 0.15rem;
+}
+
+.difficulty-desc {
+    font-size: 0.9rem;
+    opacity: 0.9;
+    font-weight: normal;
+}
+
+/* Game Screen */
+.game-screen {
+    opacity: 1;
+    transition: opacity 0.3s ease;
+}
+
+.game-screen.hidden {
+    display: none;
+}
+
+.difficulty-selection.hidden {
+    display: none;
+}
+
+/* Update subtitle to be dynamic */
+#subtitle {
+    transition: all 0.3s ease;
+}
+
+/* Responsive adjustments for difficulty buttons */
+@media (max-width: 600px) {
+    .difficulty-selection h2 {
+        font-size: 1.5rem;
+    }
+
+    .difficulty-btn {
+        padding: 20px 25px;
+        font-size: 1.1rem;
+    }
+
+    .difficulty-name {
+        font-size: 1.3rem;
+    }
+
+    .difficulty-desc {
+        font-size: 0.85rem;
+    }
+}
+
 /* GUESS WORD BUTTON */
 .guess-btn {
     width: 100%;
@@ -261,4 +378,5 @@ h1 {
         padding: 15px;
         font-size: 1rem;
     }
+
 }

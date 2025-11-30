@@ -10,55 +10,77 @@
 <div class="container">
     <header>
         <h1>POLYWORDIC</h1>
-        <p class="subtitle">You have 6 chances to guess a 5-letter word. Good luck!</p>
+        <p class="subtitle" id="subtitle">Select a difficulty level to start</p>
     </header>
 
     <main>
-        <div id="game-board">
-            <!-- Rows will be generated dynamically -->
-        </div>
-
-        <div id="message" class="message"></div>
-
-        <button id="guess-btn" class="guess-btn">GUESS WORD</button>
-
-        <div id="keyboard">
-            <div class="keyboard-row">
-                <button class="key" data-key="Q">Q</button>
-                <button class="key" data-key="W">W</button>
-                <button class="key" data-key="E">E</button>
-                <button class="key" data-key="R">R</button>
-                <button class="key" data-key="T">T</button>
-                <button class="key" data-key="Y">Y</button>
-                <button class="key" data-key="U">U</button>
-                <button class="key" data-key="I">I</button>
-                <button class="key" data-key="O">O</button>
-                <button class="key" data-key="P">P</button>
-            </div>
-            <div class="keyboard-row">
-                <button class="key" data-key="A">A</button>
-                <button class="key" data-key="S">S</button>
-                <button class="key" data-key="D">D</button>
-                <button class="key" data-key="F">F</button>
-                <button class="key" data-key="G">G</button>
-                <button class="key" data-key="H">H</button>
-                <button class="key" data-key="J">J</button>
-                <button class="key" data-key="K">K</button>
-                <button class="key" data-key="L">L</button>
-            </div>
-            <div class="keyboard-row">
-                <button class="key" data-key="Z">Z</button>
-                <button class="key" data-key="X">X</button>
-                <button class="key" data-key="C">C</button>
-                <button class="key" data-key="V">V</button>
-                <button class="key" data-key="B">B</button>
-                <button class="key" data-key="N">N</button>
-                <button class="key" data-key="M">M</button>
-                <button class="key key-large" data-key="BACKSPACE">⌫</button>
+        <!-- Difficulty Selection Screen (shown initially) -->
+        <div id="difficulty-selection" class="difficulty-selection">
+            <h2>Choose Difficulty</h2>
+            <div class="difficulty-buttons">
+                <button class="difficulty-btn" data-difficulty="EASY">
+                    <span class="difficulty-name">EASY</span>
+                    <span class="difficulty-desc">6 guesses</span>
+                </button>
+                <button class="difficulty-btn" data-difficulty="MEDIUM">
+                    <span class="difficulty-name">MEDIUM</span>
+                    <span class="difficulty-desc">5 guesses</span>
+                </button>
+                <button class="difficulty-btn" data-difficulty="HARD">
+                    <span class="difficulty-name">HARD</span>
+                    <span class="difficulty-desc">4 guesses</span>
+                </button>
             </div>
         </div>
 
-        <button id="new-game-btn" class="new-game-btn">New Game</button>
+        <!-- Game Screen (hidden initially) -->
+        <div id="game-screen" class="game-screen hidden">
+            <div id="game-board">
+                <!-- Rows will be generated dynamically -->
+            </div>
+
+            <div id="message" class="message"></div>
+
+            <button id="guess-btn" class="guess-btn">GUESS WORD</button>
+
+            <div id="keyboard">
+                <div class="keyboard-row">
+                    <button class="key" data-key="Q">Q</button>
+                    <button class="key" data-key="W">W</button>
+                    <button class="key" data-key="E">E</button>
+                    <button class="key" data-key="R">R</button>
+                    <button class="key" data-key="T">T</button>
+                    <button class="key" data-key="Y">Y</button>
+                    <button class="key" data-key="U">U</button>
+                    <button class="key" data-key="I">I</button>
+                    <button class="key" data-key="O">O</button>
+                    <button class="key" data-key="P">P</button>
+                </div>
+                <div class="keyboard-row">
+                    <button class="key" data-key="A">A</button>
+                    <button class="key" data-key="S">S</button>
+                    <button class="key" data-key="D">D</button>
+                    <button class="key" data-key="F">F</button>
+                    <button class="key" data-key="G">G</button>
+                    <button class="key" data-key="H">H</button>
+                    <button class="key" data-key="J">J</button>
+                    <button class="key" data-key="K">K</button>
+                    <button class="key" data-key="L">L</button>
+                </div>
+                <div class="keyboard-row">
+                    <button class="key" data-key="Z">Z</button>
+                    <button class="key" data-key="X">X</button>
+                    <button class="key" data-key="C">C</button>
+                    <button class="key" data-key="V">V</button>
+                    <button class="key" data-key="B">B</button>
+                    <button class="key" data-key="N">N</button>
+                    <button class="key" data-key="M">M</button>
+                    <button class="key key-large" data-key="BACKSPACE">⌫</button>
+                </div>
+            </div>
+
+            <button id="new-game-btn" class="new-game-btn">New Game</button>
+        </div>
     </main>
 </div>
 
