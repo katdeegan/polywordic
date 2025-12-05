@@ -10,9 +10,6 @@ let gameOver = false;
 let maxAttempts = 6;
 let selectedDifficulty = null;
 
-// TODO: update to call backend endpoints (defined in controller/PolywordicController.java)
-// TODO: frontend game logic: adding letters, submitting guesses, displaying results
-
 // handles difficulty button selection and creates new game
 function handleDifficultySelection(difficulty) {
     selectedDifficulty = difficulty;
@@ -110,12 +107,23 @@ function handleKeyPress(key) {
     updateGuessButton();
 }
 
-// TODO: Add letter to current guess
+// Add letter to current guess
 function addLetter(letter) {
+    const tile = document.getElementById(`tile-${currentRow}-${currentTile}`);
+    tile.textContent = letter;
+    tile.classList.add('filled');
+    currentGuess += letter;
+    currentTile++;
 }
 
-// TODO: Delete last letter
+// Delete last letter
 function deleteLetter() {
+    if (currentTile === 0) return;
+    currentTile--;
+    const tile = document.getElementById(`tile-${currentRow}-${currentTile}`);
+    tile.textContent = '';
+    tile.classList.remove('filled');
+    currentGuess = currentGuess.slice(0, -1);
 }
 
 // Updates "Guess Word" button state
@@ -128,8 +136,39 @@ function updateGuessButton() {
     }
 }
 
-// TODO: Submit guess
-function submitGuess() {
+// Submit guess
+async function submitGuess() {
+    if (gameOver || currentGuess.length !== WORD_LENGTH) return;
+
+    try {
+        const data = await sendGuessToBackend(currentGuess);
+
+        if (!data) return; // Error already handled
+
+        updateBoardColors(data.results);
+        handleGameStatus(data);
+    } catch (err) {
+        console.error(err);
+        showMessage('Error submitting guess. Try again.', 'error');
+    }
+}
+
+// Send guess to backend and return JSON response
+async function sendGuessToBackend(guess) {
+    const response = await fetch(`/api/game/${gameId}/guess`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ guess })
+    });
+
+    if (!response.ok) {
+        const err = await response.json();
+        shakeTiles();
+        showMessage(err.error || 'Invalid guess', 'error');
+        return null;
+    }
+
+    return response.json();
 }
 
 // TODO: test
@@ -142,7 +181,49 @@ function shakeTiles() {
     }, 10);
 }
 
-// TODO: message displayed to user (i.e. for correct / incorrect guesses, when game is over)
+// Apply colors to the current row based on result statuses
+function updateBoardColors(results) {
+    const row = document.getElementById(`row-${currentRow}`);
+    const tiles = row.querySelectorAll('.tile');
+
+    results.forEach((letter, i) => {
+        const tile = tiles[i];
+        let cssClass = '';
+
+        switch (letter.status) {
+            case 'CORRECT_POSITION':
+                cssClass = 'correct';
+                break;
+            case 'INCORRECT_POSITION':
+                cssClass = 'present';
+                break;
+            case 'NOT_IN_WORD':
+                cssClass = 'absent';
+                break;
+        }
+
+        if (cssClass) tile.classList.add(cssClass);
+    });
+}
+
+// Handle whether the game is won, lost, or continues
+function handleGameStatus(data) {
+    if (data.gameOver) {
+        gameOver = true;
+        if (data.won) {
+            showMessage(`You guessed it! The word was ${data.targetWord}`, 'success');
+        } else {
+            showMessage(`Game over! The word was ${data.targetWord}`, 'error');
+        }
+    } else {
+        // Move to next row
+        currentRow++;
+        currentTile = 0;
+        currentGuess = '';
+        updateGuessButton();
+    }
+}
+
 // Show message to user
 function showMessage(text, type) {
     const messageElement = document.getElementById('message');
@@ -172,8 +253,11 @@ function resetGame() {
     resetKeyboard();
 }
 
-// TODO: Reset keyboard colors
+// Reset keyboard colors
 function resetKeyboard() {
+    document.querySelectorAll('.key').forEach(k => {
+        k.classList.remove('correct', 'present', 'absent');
+    });
 }
 
 // Event listeners
