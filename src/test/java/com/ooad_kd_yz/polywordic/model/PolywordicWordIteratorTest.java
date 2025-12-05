@@ -36,7 +36,5 @@ public class PolywordicWordIteratorTest {
         PolywordicLetter currentLetterAfterReset = iterator.next();
         assertEquals('W', currentLetterAfterReset.getLetter());
         assertEquals(0, currentLetterAfterReset.getPosition());
-
-
     }
 }

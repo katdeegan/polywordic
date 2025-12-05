@@ -34,7 +34,7 @@ public class WordRepository implements IWordRepository {
         this.wordSet = new HashSet<>(words); // HashSet ensures uniqueness (not thread-safe if multiple threads are trying to access its elements)
     }
 
-    private List<String> loadWordsFromResource(String filename) {
+    protected List<String> loadWordsFromResource(String filename) {
         try (BufferedReader reader = new BufferedReader(new InputStreamReader(
                 Objects.requireNonNull(getClass().getClassLoader().getResourceAsStream(filename)),
                 StandardCharsets.UTF_8))) {
@@ -42,11 +42,11 @@ public class WordRepository implements IWordRepository {
             return reader.lines()
                     .map(String::trim)
                     .map(String::toUpperCase)
-                    .filter(w -> w.matches("^[A-Z]{5}$")) // Only keep 5-letter words?
+                    .filter(w -> w.matches("^[A-Z]{5}$"))
                     .distinct()
                     .collect(Collectors.toList());
-        } catch (Exception e) {
-            System.err.println("Failed to load dictionary: " + e.getMessage());
+        } catch (Exception exception) {
+            System.err.println("Failed to load dictionary: " + exception.getMessage());
             return Collections.emptyList();
         }
     }
