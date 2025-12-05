@@ -92,7 +92,6 @@ public class PolywordicGameService {
         return activeGames.size();
     }
 
-    // TODO: possible helper method we may / may not need
     public Set<String> getAvailableDifficulties() {
         return factories.keySet();
     }
