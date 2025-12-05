@@ -13,9 +13,15 @@ A Wordle-inspired Java web application built using **Spring Boot**, **Thymeleaf*
 
 ## Project Description
 
+**Polywordic** is a Wordle-style word-guessing game built with Java Spring Boot and JavaScript. Players have a limited number of attempts (based on difficulty level) to guess a 5-letter word, receiving color-coded feedback after each guess. This project demonstrates multiple object-oriented design patterns; specifically the MVC, Iterator, State, Factory, and Facade patterns. The implementation details for each of these patterns is described below.
+
 ### High-Level Architecture
 
 ![Architecture Diagram](polywordic-architecture.png)
+
+### Class Diagram
+
+![UML Diagram](Polywordic_Class_Diagram.png)
 
 ---
 
@@ -24,6 +30,14 @@ A Wordle-inspired Java web application built using **Spring Boot**, **Thymeleaf*
 ### 1. Model-View-Controller (MVC)
 
 _Description:_
+
+The MVC pattern separates the application into three interconnected components, each with distinct responsibilities.
+
+The **Model** layer includes the application's data, business logic, and domain rules. In the case of Polywordic, this includes defining a `PolywordicWord` class which defines a unique object type for target word in the game. `PolywordicWord` is composed of `PolywordicLetter` objects, each of which has a unique `LetterStatus` which is read and updated as the player plays the game.
+
+The **View** layer can also be referred to as the _Presentation_ layer, and is responsible for displaying data to the user and capturing user input. In the case of Polywordic, this includes the components responsible for rendering the UI (HTML, CSS) and making HTTP requests to the Controller based on user interactions (JavaScript).
+
+The **Controller** layer acts as intermediary between the View and Model. This layer is responsible for handling HTTP requests, validating input, delegating to Service, and returning responses.
 
 _Implementation:_
 

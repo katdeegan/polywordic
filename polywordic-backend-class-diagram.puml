@@ -1,0 +1,247 @@
+@startuml Polywordic Class Diagram
+
+' ============================================================================
+' MVC - CONTROLLER LAYER
+' ============================================================================
+package "controller" {
+    class PolywordicController <<Controller>> {
+        - gameService: PolywordicGameService
+        + index(): String
+        + createNewGame(difficulty: String): ResponseEntity
+        + getGame(gameId: String): ResponseEntity
+        + makeGuess(gameId: String, payload: Map): ResponseEntity
+        + deleteGame(gameId: String): ResponseEntity
+        + getAvailableDifficulties(): ResponseEntity
+    }
+}
+
+' ============================================================================
+' SERVICE LAYER (FACADE)
+' ============================================================================
+package "service" {
+    class PolywordicGameService <<Service>> {
+        - wordRepository: IWordRepository
+        - activeGames: Map<String, GameStateContext>
+        - factories: Map<String, IPolywordicGameFactory>
+        + createNewGame(difficulty: String): GameStateContext
+        + getGame(gameId: String): GameStateContext
+        + makeGuess(gameId: String, guess: String): PolywordicWord
+        + deleteGame(gameId: String): void
+        + getAvailableDifficulties(): Set<String>
+        + isValidDifficulty(difficulty: String): boolean
+    }
+}
+
+' ============================================================================
+' FACTORY METHOD PATTERN
+' ============================================================================
+package "factory" {
+    interface IPolywordicGameFactory <<Factory Method>> {
+        + createGame(gameId: String, targetWord: String): GameStateContext
+        + getMaxAttempts(): int
+        + getDifficulty(): String
+    }
+
+    class EasyPolywordicGameFactory {
+        - MAX_ATTEMPTS: int = 6
+        + createGame(gameId: String, targetWord: String): GameStateContext
+        + getMaxAttempts(): int
+        + getDifficulty(): String
+    }
+
+    class MediumPolywordicGameFactory {
+        - MAX_ATTEMPTS: int = 5
+        + createGame(gameId: String, targetWord: String): GameStateContext
+        + getMaxAttempts(): int
+        + getDifficulty(): String
+    }
+
+    class HardPolywordicGameFactory {
+        - MAX_ATTEMPTS: int = 4
+        + createGame(gameId: String, targetWord: String): GameStateContext
+        + getMaxAttempts(): int
+        + getDifficulty(): String
+    }
+}
+
+' ============================================================================
+' STATE PATTERN
+' ============================================================================
+package "state" {
+    interface IGameState <<State>> {
+        + handle(context: GameStateContext, guess: String): PolywordicWord
+        + isGameOver(): boolean
+        + gameWon(): boolean
+        + getStateName(): String
+    }
+
+    class GameStateContext <<Context>> {
+        - gameId: String
+        - targetWord: PolywordicWord
+        - guesses: List<PolywordicWord>
+        - maxAttempts: int
+        - currentState: IGameState
+        + makeGuess(guess: String): PolywordicWord
+        + isGameOver(): boolean
+        + isWon(): boolean
+        + getStateName(): String
+        + getAggregateLetterStatuses(): Map<Character, LetterStatus>
+    }
+
+    class ActiveGameState {
+        + handle(context: GameStateContext, guess: String): PolywordicWord
+        + isGameOver(): boolean
+        + gameWon(): boolean
+        + getStateName(): String
+    }
+
+    class WonGameState {
+        + handle(context: GameStateContext, guess: String): PolywordicWord
+        + isGameOver(): boolean
+        + gameWon(): boolean
+        + getStateName(): String
+    }
+
+    class LostGameState {
+        + handle(context: GameStateContext, guess: String): PolywordicWord
+        + isGameOver(): boolean
+        + gameWon(): boolean
+        + getStateName(): String
+    }
+}
+
+' ============================================================================
+' REPOSITORY PATTERN
+' ============================================================================
+package "repository" {
+    interface IWordRepository <<Repository>> {
+        + getRandomWord(): String
+        + isValidWord(word: String): boolean
+        + getAllWords(): List<String>
+    }
+
+    class WordRepository {
+        - words: List<String>
+        - wordSet: Set<String>
+        - random: Random
+        + getRandomWord(): String
+        + isValidWord(word: String): boolean
+        + getAllWords(): List<String>
+    }
+}
+
+' ============================================================================
+' MODEL - DOMAIN OBJECTS
+' ============================================================================
+package "model" {
+    class PolywordicWord <<Aggregate Root>> {
+        - word: String
+        - letters: List<PolywordicLetter>
+        + getWord(): String
+        + wordLength(): int
+        + getLetter(position: int): PolywordicLetter
+        + charAt(position: int): char
+        + updateLetterStatus(position: int, status: LetterStatus): void
+        + isGuessedCorrectly(): boolean
+        + matches(other: String): boolean
+        + evaluateGuess(guess: PolywordicWord): List<LetterStatus>
+        + createIterator(): PolywordicWordIterator
+    }
+
+    class PolywordicLetter {
+        - letter: char
+        - position: int
+        - status: LetterStatus
+        + getLetter(): char
+        + getPosition(): int
+        + getStatus(): LetterStatus
+        + setStatus(status: LetterStatus): void
+        + shouldUpdateStatus(current: LetterStatus, newStatus: LetterStatus): boolean
+    }
+
+    enum LetterStatus {
+        UNKNOWN
+        CORRECT_POSITION
+        INCORRECT_POSITION
+        NOT_IN_WORD
+    }
+}
+
+' ============================================================================
+' ITERATOR PATTERN
+' ============================================================================
+package "model.iterator" {
+    interface PWIterator<T> <<Iterator>> {
+        + hasNext(): boolean
+        + next(): T
+        + reset(): void
+    }
+
+    interface PWIterable<T> <<Iterable>> {
+        + createIterator(): PWIterator<T>
+    }
+
+    class PolywordicWordIterator {
+        - letters: List<PolywordicLetter>
+        - position: int
+        + hasNext(): boolean
+        + next(): PolywordicLetter
+        + reset(): void
+    }
+}
+
+' ============================================================================
+' RELATIONSHIPS
+' ============================================================================
+
+' MVC Pattern
+PolywordicController --> PolywordicGameService : uses
+PolywordicGameService --> IWordRepository : uses
+PolywordicGameService --> IPolywordicGameFactory : uses
+PolywordicGameService --> GameStateContext : creates/manages
+
+' Factory Pattern
+IPolywordicGameFactory <|.. EasyPolywordicGameFactory : implements
+IPolywordicGameFactory <|.. MediumPolywordicGameFactory : implements
+IPolywordicGameFactory <|.. HardPolywordicGameFactory : implements
+IPolywordicGameFactory ..> GameStateContext : creates
+
+' State Pattern
+GameStateContext --> IGameState : delegates to
+IGameState <|.. ActiveGameState : implements
+IGameState <|.. WonGameState : implements
+IGameState <|.. LostGameState : implements
+ActiveGameState ..> WonGameState : transitions to
+ActiveGameState ..> LostGameState : transitions to
+
+' Repository Pattern
+WordRepository <|.. WordRepository : implements
+
+' Iterator Pattern
+PWIterable <|.. PolywordicWord : implements
+PWIterator <|.. PolywordicWordIterator : implements
+PolywordicWord ..> PolywordicWordIterator : creates
+PWIterable ..> PWIterator : creates
+
+' Model Relationships
+GameStateContext *-- PolywordicWord : contains target word
+GameStateContext o-- PolywordicWord : contains guesses
+PolywordicWord *-- PolywordicLetter : composed of
+PolywordicLetter --> LetterStatus : has
+
+' Styling
+skinparam classAttributeIconSize 0
+skinparam shadowing false
+skinparam packageStyle rectangle
+
+skinparam class {
+    BackgroundColor<<Controller>> LightBlue
+    BackgroundColor<<Service>> LightGreen
+    BackgroundColor<<Repository>> LightYellow
+    BackgroundColor<<Factory Method>> Pink
+    BackgroundColor<<State>> Orange
+    BackgroundColor<<Iterator>> Lavender
+    BackgroundColor<<Aggregate Root>> Gold
+}
+
+@enduml
